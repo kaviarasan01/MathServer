@@ -33,11 +33,126 @@ Publish the website in the given URL.
 
 ## PROGRAM :
 
+Views.py:
+```
+from django.shortcuts import render
 
+def powerlamp(request):
+    context={}
+    context['Power'] = ""
+    context['I'] = ""
+    context['R'] = ""
+    if request.method == 'POST':
+        print("POST method is used")
+        I = request.POST.get('Intensity','')
+        R = request.POST.get('Resistence','')
+        print('request=',request)
+        print('Intensity=',I)
+        print('Resistence=',R)
+        Power = int(I) * int(I) * int(R)
+        context['Power'] = Power
+        context['I'] = I
+        context['R'] = R
+        print('Power=',Power)
+    return render(request,'mathapp/power.html',context)
+
+template file (power.html)
+
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>POWER OF LAMP IN INCANDESCENT BULD</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <style type="text/css">
+        .box {
+            display: block;
+            width: 500px;
+            min-height: 300px;
+            font-size: 20px;
+            background: rgb(21, 208, 215);
+            background: linear-gradient(90deg, rgb(99, 237, 118) 9%, rgb(193, 166, 202) 56%);
+            border-radius: 10px;
+            box-shadow: rgba(239, 5, 24, 0.35) 0px 5px 15px;
+        }
+
+        .formelt {
+            color: whitesmoke;
+            text-align: center;
+            margin-top: 7px;
+            margin-bottom: 6px;
+        }
+
+        h1 {
+            color: white;
+            text-align: center;
+            padding-top: 20px;
+        }
+        input{
+            margin: 5px;
+            padding: 5px;
+            border-radius: 5px;
+            border: none;
+
+        }
+    </style>
+</head>
+
+<body>
+    <div class="edge">
+        <div class="box">
+            <h1>POWER OF LAMP IN INCANDESCENT BULB</h1>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="formelt">
+                    INTENSITY : <input type="text" name="Intensity" value="{{I}}"></input>(in A)<br />
+                </div>
+                <div class="formelt">
+                    RESISITANCE : <input type="text" name="Resistence" value="{{R}}"></input>(in Ω)<br />
+                </div>
+                <div class="formelt">
+                    <input type="submit" value="Calculate"></input><br />
+                </div>
+                <div class="formelt">
+                    POWER : <input type="text" name="Power" value="{{Power}}"></input>W<br />
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>
+```
+urls.py
+```
+from django.contrib import admin
+from django.urls import path
+from bulb import views
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('',views.powerlamp,name="powerlamp"),]
+```
 ## SERVER SIDE PROCESSING:
+```
 
+POST method is used
+request= <WSGIRequest: POST '/'>
+Intensity= 21
+Resistence= 2
+Power= 882
+[24/Oct/2025 14:20:17] "POST / HTTP/1.1" 200 2003
+POST method is used
+request= <WSGIRequest: POST '/'>
+Intensity= 25
+Resistence= 7
+Power= 4375
+[24/Oct/2025 14:33:59] "POST / HTTP/1.1" 200 2004
+
+```
 
 ## HOMEPAGE:
+<img width="894" height="496" alt="image" src="https://github.com/user-attachments/assets/e1f7dc42-11d4-44f9-a213-49023d19f4d5" />
 
 
 ## RESULT:
